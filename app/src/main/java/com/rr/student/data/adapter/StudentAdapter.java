@@ -1,59 +1,76 @@
 package com.rr.student.data.adapter;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
-import com.rr.student.data.R;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.rr.student.data.databinding.StudentListItemBinding;
 import com.rr.student.data.info.StudentData;
 
 import java.util.ArrayList;
 
-public class StudentAdapter extends BaseAdapter {
+public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.MyViewHolder> {
 
-    Context context;
-    ArrayList<StudentData> studentData;
+    private Context context;
+    private ArrayList<StudentData> studentData;
+    private OnItemLongClickListener itemClickListener;
 
     public StudentAdapter(Context context, ArrayList<StudentData> studentData) {
         this.context = context;
-        this.studentData =studentData;
+        this.studentData = studentData;
+    }
+
+    @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        StudentListItemBinding binding = StudentListItemBinding.inflate(LayoutInflater.from(context), parent, false);
+        return new MyViewHolder(binding);
     }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        holder.itemBinding.studentItemName.setText("Name: "+studentData.get(position).getName());
+        holder.itemBinding.studentItemRoll.setText("Roll: "+studentData.get(position).getRoll());
+        holder.itemBinding.studentItemReg.setText("Reg.: "+studentData.get(position).getReg());
+        holder.itemBinding.studentItemDep.setText("Dep: "+studentData.get(position).getDep());
+
+    }
+
+    @Override
+    public int getItemCount() {
         return studentData.size();
     }
 
-    @Override
-    public Object getItem(int i) {
-        return null;
-    }
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
+        private StudentListItemBinding itemBinding;
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-
-        if(view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.student_list_item, null);
+        public MyViewHolder(@NonNull StudentListItemBinding itemBinding) {
+            super(itemBinding.getRoot());
+            this.itemBinding = itemBinding;
+            this.itemBinding.StudentItem.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (itemClickListener != null) itemClickListener.onItemClick(view, getAdapterPosition());
+                    return false;
+                }
+            });
         }
+    }
 
-        final TextView name = view.findViewById(R.id.student_item_name);
-        final TextView roll = view.findViewById(R.id.student_item_roll);
-        final TextView reg = view.findViewById(R.id.student_item_reg);
-        final TextView dep = view.findViewById(R.id.student_item_dep);
+   public void setOnItemLongClickListener(OnItemLongClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
-        name.setText("Name: "+studentData.get(i).getName());
-        roll.setText("Roll: "+studentData.get(i).getRoll());
-        reg.setText("Reg.: "+studentData.get(i).getReg());
-        dep.setText("Dep: "+studentData.get(i).getDep());
-
-        return view;
+    public interface OnItemLongClickListener {
+        void onItemClick(View view, int position);
     }
 }

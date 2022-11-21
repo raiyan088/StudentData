@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.splashscreen.SplashScreenViewProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private RecyclerView recyclerView;
     private DialogViewBinding dialogView;
     private AlertDialog dialog;
     private ArrayList<StudentData> studentData;
@@ -56,12 +56,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         studentData = new ArrayList<>();
         firebaseManager = new FirebaseService();
 
         adapter = new StudentAdapter(this, studentData);
 
-        binding.listView.setAdapter(adapter);
+        binding.recyclerView.setAdapter(adapter);
 
         ProgressDialog loading = new ProgressDialog(this);
         loading.setTitle("Load Student Data");
@@ -91,9 +93,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        binding.listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+        adapter.setOnItemLongClickListener(new StudentAdapter.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(View view, int position) {
                 AlertDialog.Builder udDialog = new AlertDialog.Builder(MainActivity.this);
                 udDialog.setTitle("Update or Delete Data");
                 udDialog.setMessage("You can update or delete this data");
@@ -185,8 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 udDialog.create().show();
-
-                return false;
             }
         });
 
