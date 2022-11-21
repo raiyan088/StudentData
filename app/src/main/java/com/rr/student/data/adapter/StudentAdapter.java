@@ -59,7 +59,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.MyViewHo
             this.itemBinding.StudentItem.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (itemClickListener != null) itemClickListener.onItemClick(view, getAdapterPosition());
+                    if (itemClickListener != null) itemClickListener.onItemLongClick(view, getAdapterPosition());
                     return false;
                 }
             });
@@ -71,6 +71,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.MyViewHo
     }
 
     public interface OnItemLongClickListener {
-        void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 }

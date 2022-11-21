@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.setOnItemLongClickListener(new StudentAdapter.OnItemLongClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemLongClick(View view, int position) {
                 AlertDialog.Builder udDialog = new AlertDialog.Builder(MainActivity.this);
                 udDialog.setTitle("Update or Delete Data");
                 udDialog.setMessage("You can update or delete this data");
